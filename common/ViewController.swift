@@ -29,7 +29,7 @@ class ViewController: UIViewController {
     0.0, 1.0, 0.9,
     -1.0, -1.0, 0.9,
     1.0, -1.0, 0.9]
-    var frameSize:[UInt]!
+    var frameSize:[Float]!
   var device: MTLDevice!
   var metalLayer: CAMetalLayer!
   var vertexBuffer: MTLBuffer!
@@ -74,17 +74,18 @@ class ViewController: UIViewController {
     timer.add(to: RunLoop.main, forMode: RunLoopMode.defaultRunLoopMode)
   }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        let window = view.window
-        if(window == nil) {return}
-        let scale = view.window?.screen.nativeScale
-        let layerSize = view.bounds.size
-        
-        frameSize = [UInt(layerSize.width * scale!), UInt(layerSize.height * scale!)]
-        uniformBuffer = device.makeBuffer(bytes: frameSize, length: 2*MemoryLayout<UInt>.size, options: [])
-        
-    }
+   override func viewDidAppear(_ animated: Bool) {
+      super.viewDidAppear(animated)
+      let window = view.window
+      if(window == nil) {return}
+      let scale = view.window?.screen.nativeScale
+      let layerSize = view.bounds.size
+      
+      frameSize = [Float(layerSize.width * scale!), Float(layerSize.height * scale!)]
+      uniformBuffer = device.makeBuffer(bytes: frameSize, 
+                                        length: 2*MemoryLayout<Float>.size, options: [])
+      
+   }
   func render() {
     guard let drawable = metalLayer?.nextDrawable() else { return }
     let renderPassDescriptor = MTLRenderPassDescriptor()
@@ -92,13 +93,13 @@ class ViewController: UIViewController {
     renderPassDescriptor.colorAttachments[0].loadAction = .clear
     renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0.0, green: 104.0/255.0, blue: 5.0/255.0, alpha: 1.0)
     
-    let commandBuffer = commandQueue.makeCommandBuffer()
-   let renderEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)
-   renderEncoder?.setRenderPipelineState(pipelineState)
-   renderEncoder?.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
-   renderEncoder?.setFragmentBuffer(uniformBuffer, offset: 0, index: 0)
-   renderEncoder?.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 3, instanceCount: 1)
-   renderEncoder?.endEncoding()
+   let commandBuffer = commandQueue.makeCommandBuffer()
+   let renderEncoder = commandBuffer?.makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
+   renderEncoder!.setRenderPipelineState(pipelineState)
+   renderEncoder!.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
+   renderEncoder!.setFragmentBuffer(uniformBuffer, offset: 0, index: 0)
+   renderEncoder!.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 3, instanceCount: 1)
+   renderEncoder!.endEncoding()
     
    commandBuffer?.present(drawable)
    commandBuffer?.commit()
