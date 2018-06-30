@@ -32,7 +32,7 @@ vertex VertexOut basic_vertex (                                         // 1
 fragment float4 basic_fragment (
    VertexOut vertexOut [[stage_in]],
    const device FrameSize * frameSize [[ buffer(0) ]]
-) { // 1
+) {// 1
    //return float4(vertexOut.color);
    return float4((vertexOut.position.x+1)/(frameSize->x),
       1 - (vertexOut.position.y+1)/(frameSize->y), vertexOut.position.z, 1.0);  // 2

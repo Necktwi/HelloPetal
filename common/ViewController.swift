@@ -81,10 +81,10 @@ class ViewController: UIViewController {
       let scale = view.window?.screen.nativeScale
       let layerSize = view.bounds.size
       
-      frameSize = [Float(layerSize.width * scale!), Float(layerSize.height * scale!)]
+      frameSize = [Float(layerSize.width), 
+         Float(layerSize.height)]
       uniformBuffer = device.makeBuffer(bytes: frameSize, 
-                                        length: 2*MemoryLayout<Float>.size, options: [])
-      
+         length: 2*MemoryLayout<Float>.size, options: [])
    }
   func render() {
     guard let drawable = metalLayer?.nextDrawable() else { return }

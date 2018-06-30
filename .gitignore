@@ -18,3 +18,7 @@ nbactions.xml
 nb-configuration.xml
 
 vgcore.*
+**/xcuserdata/
+# macOS
+**/.DS_Store
+**/._*
